@@ -1,23 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { ScanModal } from './ScanModal';
-import { apiService } from '../../services/api';
 import toast from 'react-hot-toast';
 
 export const QRScanner = ({ token, onBack }) => {
   const [scannedBooking, setScannedBooking] = useState(null);
-  const [isScanning, setIsScanning] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Keep track of last scanned QR to prevent duplicate scans
+  const lastScannedRef = useRef(null);
+  const scanTimeoutRef = useRef(null);
 
   const handleScan = async (result) => {
-    if (!result || !isScanning) return;
+    // Prevent scanning while processing or if no result
+    if (!result || isProcessing) return;
 
     let bookingId;
+    let scannedText;
+    
     try {
-      const text = result[0]?.rawValue || result?.text || result;
-      console.log('Scanned text:', text);
+      scannedText = result[0]?.rawValue || result?.text || result;
+      console.log('Scanned text:', scannedText);
 
-      const parsed = JSON.parse(text);
+      // Prevent rapid duplicate scans (within 1 second only)
+      // This prevents accidental double-scans but allows re-scanning after modal closes
+      if (lastScannedRef.current === scannedText) {
+        console.log('Rapid duplicate scan prevented (wait 1 second)');
+        return;
+      }
+
+      const parsed = JSON.parse(scannedText);
       bookingId = parsed.bookingId;
     } catch (err) {
       console.error('QR Parse Error:', err);
@@ -30,7 +43,18 @@ export const QRScanner = ({ token, onBack }) => {
       return;
     }
 
-    setIsScanning(false);
+    // Mark as processing and store last scanned QR
+    setIsProcessing(true);
+    lastScannedRef.current = scannedText;
+
+    // Clear the last scanned reference after only 1 second
+    // This allows the same QR to be scanned again for returns
+    if (scanTimeoutRef.current) {
+      clearTimeout(scanTimeoutRef.current);
+    }
+    scanTimeoutRef.current = setTimeout(() => {
+      lastScannedRef.current = null;
+    }, 1000);
 
     try {
       const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}`, {
@@ -39,17 +63,19 @@ export const QRScanner = ({ token, onBack }) => {
       const data = await res.json();
 
       if (res.ok) {
-        setScannedBooking(data);
+        // Handle both response formats (nested or direct)
+        const bookingData = data.booking || data;
+        setScannedBooking(bookingData);
         setShowModal(true);
         toast.success('Booking scanned successfully!');
       } else {
         toast.error(data.message || 'Booking not found');
-        setIsScanning(true);
+        setIsProcessing(false);
       }
     } catch (err) {
       console.error('Fetch Error:', err);
       toast.error('Error fetching booking details');
-      setIsScanning(true);
+      setIsProcessing(false);
     }
   };
 
@@ -57,8 +83,9 @@ export const QRScanner = ({ token, onBack }) => {
     if (!scannedBooking) return;
 
     try {
+      const bookingId = scannedBooking._id || scannedBooking.id;
       const res = await fetch(
-        `http://localhost:5000/api/bookings/${scannedBooking._id}/status`,
+        `http://localhost:5000/api/bookings/${bookingId}/status`,
         {
           method: 'PUT',
           headers: {
@@ -70,7 +97,7 @@ export const QRScanner = ({ token, onBack }) => {
       );
 
       if (res.ok) {
-        toast.success('Booking approved successfully!');
+        toast.success('✅ Booking approved successfully!');
         closeModal();
       } else {
         const data = await res.json();
@@ -90,8 +117,9 @@ export const QRScanner = ({ token, onBack }) => {
     }
 
     try {
+      const bookingId = scannedBooking._id || scannedBooking.id;
       const res = await fetch(
-        `http://localhost:5000/api/bookings/${scannedBooking._id}/status`,
+        `http://localhost:5000/api/bookings/${bookingId}/status`,
         {
           method: 'PUT',
           headers: {
@@ -103,7 +131,7 @@ export const QRScanner = ({ token, onBack }) => {
       );
 
       if (res.ok) {
-        toast.success('Booking rejected. Stock restored.');
+        toast.success('❌ Booking rejected. Stock restored.');
         closeModal();
       } else {
         const data = await res.json();
@@ -119,8 +147,9 @@ export const QRScanner = ({ token, onBack }) => {
     if (!scannedBooking) return;
 
     try {
+      const bookingId = scannedBooking._id || scannedBooking.id;
       const res = await fetch(
-        `http://localhost:5000/api/bookings/${scannedBooking._id}/status`,
+        `http://localhost:5000/api/bookings/${bookingId}/status`,
         {
           method: 'PUT',
           headers: {
@@ -132,7 +161,7 @@ export const QRScanner = ({ token, onBack }) => {
       );
 
       if (res.ok) {
-        toast.success('Booking marked as returned! Stock restored.');
+        toast.success('📦 Booking marked as returned! Stock restored.');
         closeModal();
       } else {
         const data = await res.json();
@@ -147,8 +176,19 @@ export const QRScanner = ({ token, onBack }) => {
   const closeModal = () => {
     setShowModal(false);
     setScannedBooking(null);
-    setIsScanning(true);
+    setIsProcessing(false);
+    // Reset immediately so next QR can be scanned
+    lastScannedRef.current = null;
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (scanTimeoutRef.current) {
+        clearTimeout(scanTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="scanner-container">
@@ -171,7 +211,11 @@ export const QRScanner = ({ token, onBack }) => {
           }}
         />
         <div className="scanner-instructions">
-          📱 Position the QR code within the frame to scan
+          {isProcessing ? (
+            <span>⏳ Processing scan...</span>
+          ) : (
+            <span>📱 Position the QR code within the frame to scan</span>
+          )}
         </div>
       </div>
 
