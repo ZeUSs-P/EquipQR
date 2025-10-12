@@ -57,7 +57,7 @@ export const QRScanner = ({ token, onBack }) => {
     }, 1000);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${bookingId}`, {
+      const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/api/bookings/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -85,7 +85,7 @@ export const QRScanner = ({ token, onBack }) => {
     try {
       const bookingId = scannedBooking._id || scannedBooking.id;
       const res = await fetch(
-        `http://localhost:5000/api/bookings/${bookingId}/status`,
+        `${process.env.REACT_APP_BACKENDURL}/api/bookings/${bookingId}/status`,
         {
           method: 'PUT',
           headers: {
@@ -119,7 +119,7 @@ export const QRScanner = ({ token, onBack }) => {
     try {
       const bookingId = scannedBooking._id || scannedBooking.id;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKENDURL}/${bookingId}/status`,
+        `${process.env.REACT_APP_BACKENDURL}/api/bookings/${bookingId}/status`,
         {
           method: 'PUT',
           headers: {
