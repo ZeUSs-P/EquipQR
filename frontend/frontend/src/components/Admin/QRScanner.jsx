@@ -149,7 +149,7 @@ export const QRScanner = ({ token, onBack }) => {
     try {
       const bookingId = scannedBooking._id || scannedBooking.id;
       const res = await fetch(
-        `http://localhost:5000/api/bookings/${bookingId}/status`,
+        `${process.env.REACT_APP_BACKENDURL}/api/bookings/${bookingId}/status`,
         {
           method: 'PUT',
           headers: {
