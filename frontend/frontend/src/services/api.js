@@ -1,29 +1,31 @@
-import { API_URL } from '../utils/constants';
+
 
 export const apiService = {
   // Items
   getItems: async () => {
-    const res = await fetch(`${API_URL}/items`);
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/items`);
     return res.json();
   },
 
+ 
+
   // Bookings
   getBookings: async (token) => {
-    const res = await fetch(`${API_URL}/bookings`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/bookings`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return res.json();
   },
 
   getBookingById: async (bookingId, token) => {
-    const res = await fetch(`${API_URL}/bookings/${bookingId}`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/bookings/${bookingId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return res.json();
   },
 
   createBooking: async (items, token) => {
-    const res = await fetch(`${API_URL}/bookings`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/bookings`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +37,7 @@ export const apiService = {
   },
 
   updateBookingStatus: async (bookingId, status, token) => {
-    const res = await fetch(`${API_URL}/bookings/${bookingId}/status`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/bookings/${bookingId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +50,7 @@ export const apiService = {
 
   // Auth
   login: async (email, password) => {
-    const res = await fetch(`${API_URL}/users/login`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -57,7 +59,7 @@ export const apiService = {
   },
 
   register: async (name, email, password) => {
-    const res = await fetch(`${API_URL}/users/register`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
@@ -66,7 +68,7 @@ export const apiService = {
   },
 
   getUserProfile: async (token) => {
-    const res = await fetch(`${API_URL}/users/profile`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/users/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return res.json();
