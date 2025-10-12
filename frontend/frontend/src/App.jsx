@@ -21,6 +21,7 @@ function App() {
   useEffect(() => {
     if (token && user && view === 'login') {
       setView('items');
+      console.log(process.env.REACT_APP_BACKENDURL)
     }
   }, [token, user]);
 
