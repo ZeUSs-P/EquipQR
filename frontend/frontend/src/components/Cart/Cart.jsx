@@ -1,12 +1,17 @@
-import React from 'react';
-import { ShoppingCart } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShoppingCart, User } from 'lucide-react';
 import { CartItem } from './CartItem';
 import { EmptyState } from '../Common/EmptyState';
 import { apiService } from '../../services/api';
 import toast from 'react-hot-toast';
 
 export const Cart = ({ cart, onRemove, onBack, token, onBookingCreated }) => {
+   const[loading,setloading] = useState(false);
+  
   const createBooking = async () => {
+    if(loading) return;
+
+    setloading(true);
     try {
       const bookingItems = cart.map(c => ({
         item: c.item._id,
@@ -58,7 +63,7 @@ export const Cart = ({ cart, onRemove, onBack, token, onBookingCreated }) => {
             />
           ))}
 
-          <button onClick={createBooking} className="btn-create-booking">
+          <button onClick={createBooking} className="btn-create-booking" disabled = {loading}>
             Create Booking
           </button>
         </div>
