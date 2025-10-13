@@ -14,7 +14,7 @@ router.post("/", protect, async (req, res) => {
     // ✅ Step 1: Check if user already has a pending booking
     const existingBooking = await Booking.findOne({
       user: req.user._id,
-      status: "pending" || "approved",
+      status: { $in: ["pending", "approved"] },
     });
 
     if (existingBooking) {
