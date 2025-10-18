@@ -32,7 +32,7 @@ export const AdminBookingCard = ({ booking, onStatusUpdate }) => {
       <div className="booking-items">
         {booking.items.map((item, idx) => (
           <div key={idx} className="booking-item-row">
-            <span className="booking-item-name">{item.item.name}</span>
+            <span className="booking-item-name">{item.item?.name}</span>
             <span className="booking-item-qty">Qty: {item.quantity}</span>
           </div>
         ))}

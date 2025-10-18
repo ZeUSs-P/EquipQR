@@ -5,7 +5,8 @@ import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
 import { Header } from './components/Layout/Header';
 import { Navigation } from './components/Layout/Navigation';
-import { ItemsList } from './components/Items/ItemsList';
+import { SportsHome } from './components/Items/SportsHome';
+import { SportItemsList } from './components/Items/SportItemsList';
 import { Cart } from './components/Cart/Cart';
 import { BookingsList } from './components/Bookings/BookingsList';
 import { AdminPanel } from './components/Admin/AdminPanel';
@@ -16,26 +17,48 @@ function App() {
   const { user, token, loading, login, register, logout } = useAuth();
   const [view, setView] = useState('login');
   const [cart, setCart] = useState([]);
-  
+  const [selectedSport, setSelectedSport] = useState(null);
 
   useEffect(() => {
     if (token && user && view === 'login') {
-      setView('items');
-      console.log(process.env.REACT_APP_BACKENDURL)
+      setView('sports-home');
     }
   }, [token, user]);
 
-  const addToCart = (item) => {
-    if (cart.length > 0 && cart[0].item._id !== item._id) {
-      if (!window.confirm('You already have another item in your cart. Replace it?')) {
-        return;
-      }
-      setCart([{ item, quantity: 1 }]);
-    } else if (cart.length === 0) {
-      setCart([{ item, quantity: 1 }]);
-    } else {
-      alert('This item is already in your cart.');
+  // Handle sport selection
+  const handleSelectSport = (sport) => {
+    setSelectedSport(sport);
+    setView('sport-items');
+  };
+
+  // Handle back from sport items
+  const handleBackFromSportItems = () => {
+    setSelectedSport(null);
+    setView('sports-home');
+    setCart([]); // Clear cart when going back to sports selection
+  };
+
+  // Add/Remove from cart with sport lock
+  const addToCart = (item, action = 'add') => {
+    if (action === 'remove') {
+      setCart(cart.filter(c => c.item._id !== item._id));
+      return;
     }
+
+    // Check if cart already has items from different sport
+    if (cart.length > 0 && cart[0].item.sport !== item.sport) {
+      alert(`You already have items from ${cart[0].item.sport}. You can only book from one sport at a time.`);
+      return;
+    }
+
+    // Check if this item is already in cart
+    if (cart.some(c => c.item._id === item._id)) {
+      alert('This item is already in your cart.');
+      return;
+    }
+
+    // Add item with quantity 1
+    setCart([...cart, { item, quantity: 1 }]);
   };
 
   const removeFromCart = (itemId) => {
@@ -81,6 +104,7 @@ function App() {
         logout();
         setView('login');
         setCart([]);
+        setSelectedSport(null);
       }} />
       <Navigation
         activeView={view}
@@ -89,10 +113,16 @@ function App() {
       />
 
       <main className="main-content">
-        {view === 'items' && (
-          <ItemsList
+        {view === 'sports-home' && (
+          <SportsHome onSelectSport={handleSelectSport} />
+        )}
+
+        {view === 'sport-items' && selectedSport && (
+          <SportItemsList
+            sport={selectedSport}
             cart={cart}
             onAddToCart={addToCart}
+            onBack={handleBackFromSportItems}
             onViewCart={() => setView('cart')}
           />
         )}
@@ -101,7 +131,7 @@ function App() {
           <Cart
             cart={cart}
             onRemove={removeFromCart}
-            onBack={() => setView('items')}
+            onBack={() => setView('sport-items')}
             token={token}
             onBookingCreated={() => {
               setCart([]);
