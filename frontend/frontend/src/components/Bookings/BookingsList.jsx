@@ -10,9 +10,7 @@ export const BookingsList = ({ userId, token }) => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('pending'); // 👈 current tab filter
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  
 
   const fetchBookings = async () => {
     try {
@@ -24,6 +22,10 @@ export const BookingsList = ({ userId, token }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
   const userBookings = bookings.filter(b => b.user._id === userId);
   const filteredBookings = userBookings.filter(b => b.status === filter);

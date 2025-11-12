@@ -11,9 +11,7 @@ export const AdminPanel = ({ token, onScanQR }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBooking, setSelectedBooking] = useState(null); // For QR modal
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  
 
   const fetchBookings = async () => {
     try {
@@ -28,6 +26,10 @@ export const AdminPanel = ({ token, onScanQR }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
   const handleStatusUpdate = async (bookingId, status) => {
     await apiService.updateBookingStatus(bookingId, status, token);

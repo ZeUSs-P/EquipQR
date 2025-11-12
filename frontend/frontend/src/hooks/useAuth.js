@@ -6,13 +6,7 @@ export const useAuth = () => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (token && !user) {
-      fetchUserProfile();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+ 
 
   const fetchUserProfile = async () => {
     try {
@@ -25,6 +19,14 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
+
+   useEffect(() => {
+    if (token && !user) {
+      fetchUserProfile();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
 
   const login = async (email, password) => {
     const data = await apiService.login(email, password);

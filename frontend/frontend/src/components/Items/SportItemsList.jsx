@@ -12,10 +12,7 @@ export const SportItemsList = ({ sport, cart, onAddToCart, onBack, onViewCart })
   const [loading, setLoading] = useState(true);
   const [sportDisplay, setSportDisplay] = useState('');
 
-  useEffect(() => {
-    fetchItems();
-    setSportDisplay(sport.charAt(0).toUpperCase() + sport.slice(1).replace("_", " "));
-  }, [sport]);
+
 
   const fetchItems = async () => {
     try {
@@ -30,6 +27,11 @@ export const SportItemsList = ({ sport, cart, onAddToCart, onBack, onViewCart })
       setLoading(false);
     }
   };
+
+    useEffect(() => {
+    fetchItems();
+    setSportDisplay(sport.charAt(0).toUpperCase() + sport.slice(1).replace("_", " "));
+  }, [sport]);
 
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
