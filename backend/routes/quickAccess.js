@@ -15,7 +15,7 @@ router.post("/admin", protect, async (req, res) => {
 
     // Create a short-lived token (5 mins)
     const payload = { id: req.user._id, isAdmin: true, quickAccess: true };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "5m" });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "10d" });
 
     const url = `https://equip-qr-vnwx.vercel.app/?oneTimeAdmin=${encodeURIComponent(token)}`;
 
