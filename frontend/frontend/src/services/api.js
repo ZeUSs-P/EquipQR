@@ -1,6 +1,131 @@
+import toast from "react-hot-toast";
+
+
 export const apiService = {
   // ==================== SPORTS ====================
-  
+  // ==================== TURFS ====================
+
+// Get all turfs
+getTurfs: async () => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/api/turfs`);
+    if (!res.ok) throw new Error('Failed to fetch turfs');
+    return res.json();
+  } catch (err) {
+    console.error('Error fetching turfs:', err);
+    throw err;
+  }
+},
+
+// Get turfs by type
+getTurfsByType: async (type) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/api/turfs/type/${type}`);
+    if (!res.ok) throw new Error(`Failed to fetch ${type} turfs`);
+    return res.json();
+  } catch (err) {
+    console.error(`Error fetching ${type} turfs:`, err);
+    throw err;
+  }
+},
+
+// Get single turf
+getTurf: async (turfId) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_BACKENDURL}/api/turfs/${turfId}`);
+    if (!res.ok) throw new Error('Failed to fetch turf');
+    return res.json();
+  } catch (err) {
+    console.error('Error fetching turf:', err);
+    throw err;
+  }
+},
+
+// Check availability
+checkTurfAvailability: async (turfId, date, startTime, endTime, token) => {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_BACKENDURL}/api/turfs/${turfId}/availability`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ date, startTime, endTime })
+      }
+    );
+    if (!res.ok) throw new Error('Failed to check availability');
+    return res.json();
+  } catch (err) {
+    console.error('Error checking availability:', err);
+    throw err;
+  }
+},
+
+// Book turf
+bookTurf: async (turfId, date, startTime, endTime, token) => {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_BACKENDURL}/api/turfs/${turfId}/book`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ date, startTime, endTime })
+      }
+    );
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || 'Failed to book turf');
+    }
+    return res.json();
+  } catch (err) {
+    console.error('Error booking turf:', err);
+    throw err;
+  }
+},
+
+// Get user bookings
+getUserTurfBookings: async (token) => {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_BACKENDURL}/api/turfs/user/bookings`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    );
+    if (!res.ok) throw new Error('Failed to fetch bookings');
+    return res.json();
+  } catch (err) {
+    console.error('Error fetching bookings:', err);
+    throw err;
+  }
+},
+
+// Cancel booking
+cancelTurfBooking: async (turfId, date, startTime, endTime, token) => {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_BACKENDURL}/api/turfs/${turfId}/cancel`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ date, startTime, endTime })
+      }
+    );
+    if (!res.ok) throw new Error('Failed to cancel booking');
+    return res.json();
+  } catch (err) {
+    console.error('Error cancelling booking:', err);
+    throw err;
+  }
+},
   // Get all sports with stats
   getSports: async () => {
     try {
@@ -130,7 +255,7 @@ export const apiService = {
       return res.json();
     } catch (err) {
       console.error('Login error:', err);
-      throw err;
+      return err;
     }
   },
 
@@ -149,7 +274,7 @@ export const apiService = {
       return res.json();
     } catch (err) {
       console.error('Registration error:', err);
-      throw err;
+      return err;
     }
   },
 
@@ -167,3 +292,4 @@ export const apiService = {
     }
   }
 };
+

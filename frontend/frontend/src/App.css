@@ -1238,3 +1238,1059 @@ body {
     align-items: flex-start;
   }
 }
+
+/* ========================================
+   TURF BOOKING STYLES
+   ======================================== */
+
+/* Turf Types Selection */
+.turf-types-container {
+  padding: 2rem 0;
+}
+
+.turf-types-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.turf-types-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.turf-types-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.turf-types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.turf-type-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.turf-type-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--card-color);
+}
+
+.turf-type-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  border-color: var(--card-color);
+}
+
+.turf-type-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.turf-type-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.turf-count {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-view-courts {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--card-color) 0%, var(--card-color) 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-view-courts:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Turf List */
+.turf-list-container {
+  padding: 2rem 0;
+}
+
+.turf-list-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.btn-back-turf {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #f1f5f9;
+  color: #667eea;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-back-turf:hover {
+  background: #e2e8f0;
+  transform: translateX(-4px);
+}
+
+.turfs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.turf-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.turf-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.turf-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.turf-icon {
+  font-size: 2.5rem;
+}
+
+.turf-card-header h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.turf-card-body {
+  margin-bottom: 1.5rem;
+}
+
+.turf-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.turf-stat span:first-child {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.stat-value.available {
+  color: #16a34a;
+}
+
+.btn-book-turf {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-book-turf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Turf Booking Form */
+.turf-booking-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.turf-booking-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.turf-booking-form {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.btn-submit-booking {
+  width: 100%;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.btn-submit-booking:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4);
+}
+
+.btn-submit-booking:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.existing-bookings {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.existing-bookings h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.booking-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* My Turf Bookings */
+.my-turf-bookings {
+  padding: 2rem 0;
+}
+
+.my-turf-bookings h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 2rem;
+}
+
+.bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.turf-booking-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.turf-booking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.booking-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.turf-type-icon {
+  font-size: 2.5rem;
+}
+
+.booking-card-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.turf-type {
+  color: #667eea;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.booking-card-body {
+  margin-bottom: 1.5rem;
+}
+
+.booking-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.booking-detail svg {
+  color: #667eea;
+}
+
+.btn-cancel-booking {
+  width: 100%;
+  padding: 1rem;
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel-booking:hover {
+  background: #fecaca;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .turf-types-grid,
+  .turfs-grid,
+  .bookings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .turf-booking-header,
+  .turf-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 1.1rem;
+  color: #64748b;
+}
+
+/* ===========================
+   Booking Filter Buttons
+   =========================== */
+.booking-filter-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.booking-filter-btn {
+  padding: 0.75rem 1.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.booking-filter-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.booking-filter-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-view-qr {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.btn-view-qr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.search-bar:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+/* ============================
+   💡 Enhanced Mobile Responsiveness
+   ============================ */
+@media (max-width: 768px) {
+  /* General Layout Fixes */
+  body {
+    font-size: 0.95rem;
+  }
+
+  .header-content,
+  .nav-content,
+  .main-content {
+    padding: 1rem;
+  }
+
+  .brand-title {
+    font-size: 1.4rem;
+  }
+
+  .nav-content {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .nav-button {
+    flex: 1 1 45%;
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* Cards & Containers */
+  .booking-card,
+  .item-card,
+  .turf-card,
+  .sport-card {
+    padding: 1.25rem;
+    border-radius: 14px;
+  }
+
+  .booking-header {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 0.5rem;
+  }
+
+  .booking-meta {
+    text-align: left;
+  }
+
+  .booking-actions {
+    flex-direction: column;
+  }
+
+  .btn-approve,
+  .btn-reject,
+  .btn-return {
+    width: 100%;
+  }
+
+  /* Search Bar */
+  .search-container {
+    padding: 0 1rem;
+  }
+
+  .search-bar {
+    max-width: 100%;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+  }
+
+  /* Filter Buttons */
+  .booking-filter-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .booking-filter-btn {
+    flex: 1 1 45%;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  /* Cart Items & Lists */
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .cart-item-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Turf & Sports Grids */
+  .sports-grid,
+  .turf-types-grid,
+  .turfs-grid,
+  .bookings-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .sport-card h3,
+  .turf-type-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .sport-icon-large,
+  .turf-type-icon {
+    font-size: 2.75rem;
+  }
+
+  /* Buttons */
+  .btn-view-qr,
+  .btn-scan,
+  .btn-create-booking,
+  .btn-add-to-cart,
+  .btn-book-turf {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Modal */
+  .modal-content {
+    padding: 1.5rem;
+    width: 95%;
+    max-width: 95%;
+    border-radius: 16px;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .qr-code-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  /* Header & Brand */
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .user-info {
+    justify-content: center;
+  }
+
+  /* App padding reduction */
+  .main-content {
+    padding: 1.5rem 1rem;
+  }
+
+  /* Hide heavy shadows on mobile */
+  .item-card,
+  .booking-card,
+  .turf-card,
+  .sport-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* =================================
+   💡 Ultra-small devices (≤480px)
+   ================================= */
+@media (max-width: 480px) {
+  .brand-title {
+    font-size: 1.2rem;
+  }
+
+  .nav-button {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .booking-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 0.75rem;
+  }
+
+  .booking-item-name {
+    font-size: 0.9rem;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .btn-view-qr {
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .search-bar {
+    padding: 0.5rem 0.75rem;
+  }
+}
+/* ============================
+   🔹 Header + Burger Icon Layout
+   ============================ */
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* brand on left, menu/logout on right */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+/* Mobile Responsive Header */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #334155;
+  }
+
+  .menu-toggle {
+    padding: 0.4rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .menu-toggle:hover {
+    background: #f1f5f9;
+  }
+
+  .mobile-menu {
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .mobile-user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .mobile-user-info .user-name {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .btn-mobile-logout {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-mobile-logout:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+  }
+}
+
+/* ============================
+   🔹 Header + Burger Icon Layout
+   ============================ */
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* brand on left, menu/logout on right */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+/* Mobile Responsive Header */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #334155;
+  }
+
+  .menu-toggle {
+    padding: 0.4rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .menu-toggle:hover {
+    background: #f1f5f9;
+  }
+
+  .mobile-menu {
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .mobile-user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .mobile-user-info .user-name {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .btn-mobile-logout {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-mobile-logout:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+  }
+}
+/* ========================================
+   💪 Force proper header alignment
+   ======================================== */
+.header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+  display: flex !important;
+  flex-direction: row !important;  /* ✅ Make sure it's horizontal */
+  align-items: center;
+  justify-content: space-between;  /* ✅ Brand on left, burger/right content on right */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.menu-toggle {
+  margin-left: auto; /* ✅ Push burger to the far right */
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0.75rem 1rem;
+  }
+}
+

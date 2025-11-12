@@ -7,26 +7,22 @@ export const QRScanner = ({ token, onBack }) => {
   const [scannedBooking, setScannedBooking] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  
-  // Keep track of last scanned QR to prevent duplicate scans
+
   const lastScannedRef = useRef(null);
   const scanTimeoutRef = useRef(null);
 
   const handleScan = async (result) => {
-    // Prevent scanning while processing or if no result
     if (!result || isProcessing) return;
 
     let bookingId;
     let scannedText;
-    
+
     try {
       scannedText = result[0]?.rawValue || result?.text || result;
       console.log('Scanned text:', scannedText);
 
-      // Prevent rapid duplicate scans (within 1 second only)
-      // This prevents accidental double-scans but allows re-scanning after modal closes
       if (lastScannedRef.current === scannedText) {
-        console.log('Rapid duplicate scan prevented (wait 1 second)');
+        console.log('Duplicate scan prevented');
         return;
       }
 
@@ -43,15 +39,11 @@ export const QRScanner = ({ token, onBack }) => {
       return;
     }
 
-    // Mark as processing and store last scanned QR
     setIsProcessing(true);
     lastScannedRef.current = scannedText;
 
-    // Clear the last scanned reference after only 1 second
-    // This allows the same QR to be scanned again for returns
-    if (scanTimeoutRef.current) {
-      clearTimeout(scanTimeoutRef.current);
-    }
+    // Allow re-scanning of the same QR after 1s
+    if (scanTimeoutRef.current) clearTimeout(scanTimeoutRef.current);
     scanTimeoutRef.current = setTimeout(() => {
       lastScannedRef.current = null;
     }, 1000);
@@ -63,23 +55,23 @@ export const QRScanner = ({ token, onBack }) => {
       const data = await res.json();
 
       if (res.ok) {
-        // Handle both response formats (nested or direct)
         const bookingData = data.booking || data;
         setScannedBooking(bookingData);
         setShowModal(true);
         toast.success('Booking scanned successfully!');
       } else {
         toast.error(data.message || 'Booking not found');
-        setIsProcessing(false);
       }
     } catch (err) {
       console.error('Fetch Error:', err);
       toast.error('Error fetching booking details');
+    } finally {
+      // ✅ Unlock scanner so next QR can be scanned (even if modal shows)
       setIsProcessing(false);
     }
   };
 
-  const handleApprove = async () => {
+  const updateBookingStatus = async (status, successMessage, errorMessage) => {
     if (!scannedBooking) return;
 
     try {
@@ -92,101 +84,42 @@ export const QRScanner = ({ token, onBack }) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({ status: 'approved' }),
+          body: JSON.stringify({ status }),
         }
       );
 
+      const data = await res.json();
+
       if (res.ok) {
-        toast.success('✅ Booking approved successfully!');
-        closeModal();
+        toast.success(successMessage);
+        closeModal(); // ✅ Modal close resets scanner now
       } else {
-        const data = await res.json();
-        toast.error(data.message || 'Error approving booking');
+        toast.error(data.message || errorMessage);
       }
     } catch (err) {
-      console.error('Approve Error:', err);
-      toast.error('Error approving booking');
+      console.error('Status Update Error:', err);
+      toast.error(errorMessage);
     }
   };
 
-  const handleReject = async () => {
-    if (!scannedBooking) return;
-
-    if (!window.confirm('Are you sure you want to reject this booking? Stock will be restored.')) {
-      return;
-    }
-
-    try {
-      const bookingId = scannedBooking._id || scannedBooking.id;
-      const res = await fetch(
-        `${process.env.REACT_APP_BACKENDURL}/api/bookings/${bookingId}/status`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ status: 'rejected' }),
-        }
-      );
-
-      if (res.ok) {
-        toast.success('❌ Booking rejected. Stock restored.');
-        closeModal();
-      } else {
-        const data = await res.json();
-        toast.error(data.message || 'Error rejecting booking');
-      }
-    } catch (err) {
-      console.error('Reject Error:', err);
-      toast.error('Error rejecting booking');
-    }
-  };
-
-  const handleReturn = async () => {
-    if (!scannedBooking) return;
-
-    try {
-      const bookingId = scannedBooking._id || scannedBooking.id;
-      const res = await fetch(
-        `${process.env.REACT_APP_BACKENDURL}/api/bookings/${bookingId}/status`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ status: 'returned' }),
-        }
-      );
-
-      if (res.ok) {
-        toast.success('📦 Booking marked as returned! Stock restored.');
-        closeModal();
-      } else {
-        const data = await res.json();
-        toast.error(data.message || 'Error updating booking');
-      }
-    } catch (err) {
-      console.error('Update Error:', err);
-      toast.error('Error updating booking');
-    }
-  };
+  const handleApprove = () =>
+    updateBookingStatus('approved', '✅ Booking approved successfully!', 'Error approving booking');
+  const handleReject = () =>
+    updateBookingStatus('rejected', '❌ Booking rejected. Stock restored.', 'Error rejecting booking');
+  const handleReturn = () =>
+    updateBookingStatus('returned', '📦 Booking marked as returned! Stock restored.', 'Error returning booking');
 
   const closeModal = () => {
     setShowModal(false);
     setScannedBooking(null);
+    // ✅ Allow next scans immediately
     setIsProcessing(false);
-    // Reset immediately so next QR can be scanned
     lastScannedRef.current = null;
   };
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
-      if (scanTimeoutRef.current) {
-        clearTimeout(scanTimeoutRef.current);
-      }
+      if (scanTimeoutRef.current) clearTimeout(scanTimeoutRef.current);
     };
   }, []);
 

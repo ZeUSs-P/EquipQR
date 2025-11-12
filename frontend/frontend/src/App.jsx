@@ -23,7 +23,7 @@ function App() {
     if (token && user && view === 'login') {
       setView('sports-home');
     }
-  }, [token, user]);
+  }, [token, user, view]);
 
   // Handle sport selection
   const handleSelectSport = (sport) => {
@@ -35,7 +35,7 @@ function App() {
   const handleBackFromSportItems = () => {
     setSelectedSport(null);
     setView('sports-home');
-    setCart([]); // Clear cart when going back to sports selection
+    setCart([]);
   };
 
   // Add/Remove from cart with sport lock
@@ -45,19 +45,16 @@ function App() {
       return;
     }
 
-    // Check if cart already has items from different sport
     if (cart.length > 0 && cart[0].item.sport !== item.sport) {
       alert(`You already have items from ${cart[0].item.sport}. You can only book from one sport at a time.`);
       return;
     }
 
-    // Check if this item is already in cart
     if (cart.some(c => c.item._id === item._id)) {
       alert('This item is already in your cart.');
       return;
     }
 
-    // Add item with quantity 1
     setCart([...cart, { item, quantity: 1 }]);
   };
 
@@ -67,11 +64,11 @@ function App() {
 
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '100vh' 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh'
       }}>
         Loading...
       </div>
@@ -100,12 +97,15 @@ function App() {
   return (
     <div className="app-container">
       <Toaster position="top-center" />
-      <Header user={user} onLogout={() => {
-        logout();
-        setView('login');
-        setCart([]);
-        setSelectedSport(null);
-      }} />
+      <Header
+        user={user}
+        onLogout={() => {
+          logout();
+          setView('login');
+          setCart([]);
+          setSelectedSport(null);
+        }}
+      />
       <Navigation
         activeView={view}
         onViewChange={setView}
@@ -113,6 +113,7 @@ function App() {
       />
 
       <main className="main-content">
+        {/* Equipment Booking Views */}
         {view === 'sports-home' && (
           <SportsHome onSelectSport={handleSelectSport} />
         )}
@@ -144,6 +145,7 @@ function App() {
           <BookingsList userId={user._id} token={token} />
         )}
 
+        {/* Admin Views */}
         {view === 'admin' && user?.isAdmin && (
           <AdminPanel
             token={token}
