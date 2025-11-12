@@ -29,7 +29,7 @@ export const AdminPanel = ({ token, onScanQR }) => {
 
   useEffect(() => {
     fetchBookings();
-  }, []);
+  }, [fetchBookings]);
 
   const handleStatusUpdate = async (bookingId, status) => {
     await apiService.updateBookingStatus(bookingId, status, token);
