@@ -19,6 +19,45 @@ function App() {
   const [cart, setCart] = useState([]);
   const [selectedSport, setSelectedSport] = useState(null);
 
+
+    // 🟢 Auto-login for one-time admin QR access
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const quickToken = params.get('oneTimeAdmin');
+    if (!quickToken) return;
+
+    // Clean the URL (remove the token query)
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+
+    // Try validating the token
+    (async () => {
+      try {
+        localStorage.setItem('token', quickToken);
+        const res = await fetch('https://equip-qr-beryl.vercel.app/api/users/profile', {
+          headers: { Authorization: `Bearer ${quickToken}` },
+        });
+
+        if (!res.ok) {
+          localStorage.removeItem('token');
+          return;
+        }
+
+        const userData = await res.json();
+        if (userData.isAdmin) {
+          localStorage.setItem('user', JSON.stringify(userData));
+          window.location.reload(); // reload app as admin
+        } else {
+          localStorage.removeItem('token');
+        }
+      } catch (err) {
+        console.error('One-time admin login failed:', err);
+        localStorage.removeItem('token');
+      }
+    })();
+  }, []);
+
+
   useEffect(() => {
     if (token && user && view === 'login') {
       setView('sports-home');

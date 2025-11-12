@@ -7,6 +7,10 @@ import userRoutes from "./routes/userRoutes.js";
 import bookingRoutes from "./routes/BookingRoutes.js";
 import turfRoutes from "./routes/TurfRoutes.js"; // ✨ NEW
 import "./jobs/autoCleanup.js";
+import quickAccessRoutes from "./routes/quickAccess.js";
+
+
+
 
 
 dotenv.config();
@@ -28,6 +32,7 @@ app.use("/api/items", itemRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/turfs", turfRoutes); // ✨ NEW
+app.use("/api/quick-access", quickAccessRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
