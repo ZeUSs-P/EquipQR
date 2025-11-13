@@ -22,6 +22,24 @@ export const Navigation = ({ activeView, onViewChange, isAdmin }) => {
           📋 My Bookings
         </button>
 
+        {/* Turf Booking Section */}
+<button
+  onClick={() => onViewChange('turf-types')}
+  className={`nav-button ${activeView.startsWith('turf') ? 'active' : ''}`}
+>
+  🏟️ Turf Booking
+</button>
+
+<button
+  onClick={() => onViewChange('my-turf-bookings')}
+  className={`nav-button ${
+    activeView === 'my-turf-bookings' ? 'active' : ''
+  }`}
+>
+  🏟️ My Turf Bookings
+</button>
+
+
         {/* Admin Panel */}
         {isAdmin && (
           <button

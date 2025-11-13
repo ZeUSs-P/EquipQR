@@ -11,6 +11,11 @@ import { Cart } from './components/Cart/Cart';
 import { BookingsList } from './components/Bookings/BookingsList';
 import { AdminPanel } from './components/Admin/AdminPanel';
 import { QRScanner } from './components/Admin/QRScanner';
+// ✨ NEW IMPORTS
+import { TurfTypes } from './components/Turfs/TurfTypes';
+import { TurfList } from './components/Turfs/TurfList';
+import { TurfBookingForm } from './components/Turfs/TurfBookingForm';
+import { MyTurfBookings } from './components/Turfs/MyTurfBookings';
 import './App.css';
 
 function App() {
@@ -18,51 +23,16 @@ function App() {
   const [view, setView] = useState('login');
   const [cart, setCart] = useState([]);
   const [selectedSport, setSelectedSport] = useState(null);
-
-
-    // 🟢 Auto-login for one-time admin QR access
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const quickToken = params.get('oneTimeAdmin');
-    if (!quickToken) return;
-
-    // Clean the URL (remove the token query)
-    const cleanUrl = window.location.origin + window.location.pathname;
-    window.history.replaceState({}, document.title, cleanUrl);
-
-    // Try validating the token
-    (async () => {
-      try {
-        localStorage.setItem('token', quickToken);
-        const res = await fetch('https://equip-qr-beryl.vercel.app/api/users/profile', {
-          headers: { Authorization: `Bearer ${quickToken}` },
-        });
-
-        if (!res.ok) {
-          localStorage.removeItem('token');
-          return;
-        }
-
-        const userData = await res.json();
-        if (userData.isAdmin) {
-          localStorage.setItem('user', JSON.stringify(userData));
-          window.location.reload(); // reload app as admin
-        } else {
-          localStorage.removeItem('token');
-        }
-      } catch (err) {
-        console.error('One-time admin login failed:', err);
-        localStorage.removeItem('token');
-      }
-    })();
-  }, []);
-
+  
+  // ✨ NEW STATE FOR TURFS
+  const [selectedTurfType, setSelectedTurfType] = useState(null);
+  const [selectedTurf, setSelectedTurf] = useState(null);
 
   useEffect(() => {
     if (token && user && view === 'login') {
       setView('sports-home');
     }
-  }, [token, user, view]);
+  }, [token, user]);
 
   // Handle sport selection
   const handleSelectSport = (sport) => {
@@ -75,6 +45,30 @@ function App() {
     setSelectedSport(null);
     setView('sports-home');
     setCart([]);
+  };
+
+  // ✨ NEW: Handle turf type selection
+  const handleSelectTurfType = (type) => {
+    setSelectedTurfType(type);
+    setView('turf-list');
+  };
+
+  // ✨ NEW: Handle turf selection
+  const handleSelectTurf = (turf) => {
+    setSelectedTurf(turf);
+    setView('turf-booking-form');
+  };
+
+  // ✨ NEW: Handle back from turf views
+  const handleBackToTurfTypes = () => {
+    setSelectedTurfType(null);
+    setSelectedTurf(null);
+    setView('turf-types');
+  };
+
+  const handleBackToTurfList = () => {
+    setSelectedTurf(null);
+    setView('turf-list');
   };
 
   // Add/Remove from cart with sport lock
@@ -103,11 +97,11 @@ function App() {
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh'
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh' 
       }}>
         Loading...
       </div>
@@ -136,15 +130,14 @@ function App() {
   return (
     <div className="app-container">
       <Toaster position="top-center" />
-      <Header
-        user={user}
-        onLogout={() => {
-          logout();
-          setView('login');
-          setCart([]);
-          setSelectedSport(null);
-        }}
-      />
+      <Header user={user} onLogout={() => {
+        logout();
+        setView('login');
+        setCart([]);
+        setSelectedSport(null);
+        setSelectedTurfType(null);
+        setSelectedTurf(null);
+      }} />
       <Navigation
         activeView={view}
         onViewChange={setView}
@@ -182,6 +175,36 @@ function App() {
 
         {view === 'bookings' && (
           <BookingsList userId={user._id} token={token} />
+        )}
+
+        {/* ✨ NEW: Turf Booking Views */}
+        {view === 'turf-types' && (
+          <TurfTypes onSelectType={handleSelectTurfType} />
+        )}
+
+        {view === 'turf-list' && selectedTurfType && (
+          <TurfList
+            type={selectedTurfType}
+            onBack={handleBackToTurfTypes}
+            onSelectTurf={handleSelectTurf}
+          />
+        )}
+
+        {view === 'turf-booking-form' && selectedTurf && (
+          <TurfBookingForm
+            turf={selectedTurf}
+            token={token}
+            onBack={handleBackToTurfList}
+            onSuccess={() => {
+              setView('my-turf-bookings');
+              setSelectedTurf(null);
+              setSelectedTurfType(null);
+            }}
+          />
+        )}
+
+        {view === 'my-turf-bookings' && (
+          <MyTurfBookings token={token} />
         )}
 
         {/* Admin Views */}
